@@ -3,97 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swipeable Drawer</title>
+    <title>Prayer App</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="styles\site-new.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            overflow-x: hidden;
+        .admin-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
 
-        .drawer {
+
+        #adminModal {
+            display: none;
             position: fixed;
             top: 0;
-            left: -250px;
-            width: 250px;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background-color: #333;
-            color: white;
-            transition: left 0.3s;
+            background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
         }
 
-            .drawer.open {
-                left: 0;
-            }
-
-            .drawer ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-                .drawer ul li {
-                    padding: 15px;
-                    border-bottom: 1px solid #444;
-                }
-
-                    .drawer ul li a {
-                        color: white;
-                        text-decoration: none;
-                    }
-
-        .content {
+        #adminModalContent {
+            background: #fff;
+            margin: 0;
             padding: 20px;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            position: fixed; /* Changed from relative to fixed */
+            top: 0;
+            left: 0;
+        }
+
+        .close-admin-modal {
+            position: fixed; /* Changed from absolute to fixed */
+            top: 0px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #myPrayerModal, #prayerModal, #groupModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1100; /* Higher than adminModal */
+        }
+
+        .modal-content {
+            background: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            width: 90%;
+            height: 90%;
+            overflow: auto;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="drawer" id="drawer">
+    <header>
+        <h1>Prayer App</h1>
+        <img src="admin-icon.png" alt="Admin" class="admin-icon" id="adminIcon">
+    </header>
+    <div id="tabs">
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#dailyTabContent">Daily</a></li>
+            <li><a href="#otherTabContent">Other</a></li>
         </ul>
+        <div id="dailyTabContent" class="tab-content">
+            <!-- Daily tab content -->
+        </div>
+        <div id="otherTabContent" class="tab-content">
+            <!-- Other tab content -->
+        </div>
     </div>
-    <div class="content">
-        <button id="openDrawerButton">Open Drawer</button>
-        <h1>Swipeable Drawer Example</h1>
-        <p>Swipe from the left edge to open the drawer.</p>
+    <div id="adminModal">
+        <div id="adminModalContent">
+            <span class="close-admin-modal" id="closeAdminModal">&times;</span>
+            <div id="adminTabs">
+                <ul>
+                    <li><a href="#prayersSubTabContent">Prayers</a></li>
+                    <li><a href="#groupsSubTabContent">Groups</a></li>
+                    <li><a href="#myPrayersSubTabContent">My Prayers</a></li>
+                </ul>
+                <div id="prayersSubTabContent" class="sub-tab-content">
+                    <button id="addPrayerButton" class="btn">Add Prayer</button>
+                    <table id="prayerList" class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Prayer rows will be appended here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="groupsSubTabContent" class="sub-tab-content">
+                    <button id="addGroupButton" class="btn">Add Group</button>
+                    <table id="groupList" class="table">
+                        <thead>
+                            <tr>
+                                <th>Group Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Group rows will be appended here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="myPrayersSubTabContent" class="sub-tab-content">
+                    <button id="addMyPrayerButton" class="btn">Add My Prayer</button>
+                    <table id="myPrayerList" class="table">
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Prayer</th>
+                                <th>Daily Prayer</th>
+                                <th>Counter</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- My Prayer rows will be appended here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <script>const drawer = document.getElementById('drawer');
-        const openDrawerButton = document.getElementById('openDrawerButton');
+    <!-- Modal for adding prayers -->
+    <div id="prayerModal" class="modal">
+        <div class="modal-content">
+            <span id="closePrayerButton" class="close">&times;</span>
+            <form id="prayerForm">
+                <input type="hidden" id="prayerId" />
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" placeholder="Title" required>
+                </div>
+                <div class="form-group">
+                    <label for="icon">Emoji:</label>
+                    <input type="text" id="icon" placeholder="Emoji" required>
+                </div>
+                <div class="form-group">
+                    <label for="prayerContent">Content:</label>
+                    <textarea id="prayerContent" placeholder="Content" required></textarea>
+                </div>
+                <button type="button" id="savePrayerButton" class="btn">Save</button>
+                <button type="button" id="saveAddNewPrayerButton" class="btn">Save and Add New</button>
+            </form>
+        </div>
+    </div>
 
-        openDrawerButton.addEventListener('click', () => {
-            drawer.classList.toggle('open');
-        });
+    <!-- Modal for adding groups -->
+    <div id="groupModal" class="modal">
+        <div class="modal-content">
+            <span id="closeGroupButton" class="close">&times;</span>
+            <h2>Group Entry Form</h2>
+            <form id="groupForm">
+                <input type="hidden" id="groupId" />
+                <div class="form-group">
+                    <label for="groupName">Group Name:</label>
+                    <input type="text" id="groupName" placeholder="Group Name" required>
+                </div>
+                <button type="button" id="saveGroupButton" class="btn">Save</button>
+                <button type="button" id="saveAddNewGroupButton" class="btn">Save and Add New</button>
+            </form>
+        </div>
+    </div>
 
-        let startX;
+    <!-- Modal for adding my prayers -->
+    <div id="myPrayerModal" class="modal">
+        <div class="modal-content">
+            <span id="closeMyPrayerButton" class="close">&times;</span>
+            <form id="myPrayerForm">
+                <input type="hidden" id="myPrayerId" />
+                <div class="form-group">
+                    <label for="toggleGroupSelect">Show Group Select:</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleGroupSelect">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="form-group" id="selectGroupRow" style="display: none;">
+                    <label for="selectGroup">Select Group:</label>
+                    <select id="selectGroup"></select>
+                </div>
+                <div class="form-group">
+                    <label for="togglePrayerSelect">Show Prayer Select:</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="togglePrayerSelect">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="form-group" id="selectPrayerRow" style="display: none;">
+                    <label for="selectPrayer">Select Prayer:</label>
+                    <select id="selectPrayer"></select>
+                </div>
+                <div class="form-group">
+                    <label for="hasCounter">Do you need a counter?:</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="hasCounter">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="myPrayerTitle">Title:</label>
+                    <input type="text" id="myPrayerTitle" placeholder="Title" required>
+                </div>
+                <div class="form-group">
+                    <label for="myPrayerContent">Content:</label>
+                    <textarea id="myPrayerContent" placeholder="Content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="isDailyPrayer">Daily Prayer:</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="isDailyPrayer">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button type="button" id="saveMyPrayerButton" class="btn">Save</button>
+                <button type="button" id="saveAddNewMyPrayerButton" class="btn">Save and Add New</button>
+            </form>
+        </div>
+    </div>
+    <script src="scripts/site-new.js"></script>
+    <script>$(function() {
+        $("#tabs").tabs();
+        $("#adminTabs").tabs();
 
-        document.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-        });
+        $("#adminIcon").click(function() {
+                $("#tabs").hide();
+    $("#adminModal").show();
+});
 
-        document.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            const change = touch.clientX - startX;
+            $("#closeAdminModal").click(function() {
+                $("#adminModal").hide();
+                $("#tabs").show();
+            });
 
-            if (change > 0 && change < 250) {
-                drawer.style.left = `${-250 + change}px`;
-            }
-        });
-
-        document.addEventListener('touchend', (e) => {
-            const change = e.changedTouches[0].clientX - startX;
-
-            if (change > 100) {
-                drawer.classList.add('open');
-            } else {
-                drawer.classList.remove('open');
-            }
-
-            drawer.style.left = '';
-        });</script>
+$("#adminModal").click(function(event) {
+    if (event.target == this) {
+        $(this).hide();
+                    $("#tabs").show();
+    }
+});
+    });</script>
 </body>
 </html>
