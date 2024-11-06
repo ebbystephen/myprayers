@@ -3,202 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prayer Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="styles/site.css">
+    <title>Swipeable Drawer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            transition: left 0.3s;
+            z-index: 1000;
+        }
+
+            .drawer.open {
+                left: 0;
+            }
+
+            .drawer ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+                .drawer ul li {
+                    padding: 15px;
+                    border-bottom: 1px solid #444;
+                }
+
+                    .drawer ul li a {
+                        color: white;
+                        text-decoration: none;
+                    }
+
+        .content {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center my-4">Prayer Manager</h1>
-        <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action" id="dailyTab">Daily Prayer</a>
-            <a href="#" class="list-group-item list-group-item-action" id="otherTab">Other Prayers</a>
-            <a href="#" class="list-group-item list-group-item-action" id="adminTab">Admin</a>
-        </div>
-        <div id="content" class="mt-4">
-            <div id="dailyTabContent" class="tab-content">Daily Prayer Content</div>
-            <div id="otherTabContent" class="tab-content">Other Prayers Content</div>
-            <div id="adminTabContent" class="tab-content">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action" id="prayersSubTab">Prayers</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="groupsSubTab">Groups</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="myPrayersSubTab">My Prayers</a>
-                </div>
-                <div id="prayersSubTabContent" class="sub-tab-content mt-4">
-                    <button id="addPrayerButton" class="btn btn-primary mb-2">Add Prayer</button>
-                    <table id="prayerList" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Prayer rows will be appended here -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="groupsSubTabContent" class="sub-tab-content mt-4">
-                    <button id="addGroupButton" class="btn btn-primary mb-2">Add Group</button>
-                    <table id="groupList" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Group Name</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Group rows will be appended here -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="myPrayersSubTabContent" class="sub-tab-content mt-4">
-                    <button id="addMyPrayerButton" class="btn btn-primary mb-2">Add My Prayer</button>
-                    <table id="myPrayerList" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Group</th>
-                                <th>Prayer</th>
-                                <th>Daily Prayer</th>
-                                <th>Counter</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- My Prayer rows will be appended here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal for adding prayers -->
-        <div id="prayerModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Prayer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="prayerForm">
-                            <input type="hidden" id="prayerId" />
-                            <div class="form-group">
-                                <label for="title">Title:</label>
-                                <input type="text" id="title" class="form-control" placeholder="Title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="icon">Emoji:</label>
-                                <input type="text" id="icon" class="form-control" placeholder="Emoji" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="prayerContent">Content:</label>
-                                <textarea id="prayerContent" class="form-control" placeholder="Content" required></textarea>
-                            </div>
-                            <button type="button" id="savePrayerButton" class="btn btn-primary">Save</button>
-                            <button type="button" id="saveAddNewPrayerButton" class="btn btn-secondary">Save and Add New</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal for adding groups -->
-        <div id="groupModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Group</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="groupForm">
-                            <input type="hidden" id="groupId" />
-                            <div class="form-group">
-                                <label for="groupName">Group Name:</label>
-                                <input type="text" id="groupName" class="form-control" placeholder="Group Name" required>
-                            </div>
-                            <button type="button" id="saveGroupButton" class="btn btn-primary">Save</button>
-                            <button type="button" id="saveAddNewGroupButton" class="btn btn-secondary">Save and Add New</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal for adding my prayers -->
-        <div id="myPrayerModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add My Prayer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="myPrayerForm">
-                            <input type="hidden" id="myPrayerId" />
-                            <div class="form-group">
-                                <label for="toggleGroupSelect">Show Group Select:</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="toggleGroupSelect">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="form-group" id="selectGroupRow" style="display: none;">
-                                <label for="selectGroup">Select Group:</label>
-                                <select id="selectGroup" class="form-control"></select>
-                            </div>
-                            <div class="form-group">
-                                <label for="togglePrayerSelect">Show Prayer Select:</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="togglePrayerSelect">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="form-group" id="selectPrayerRow" style="display: none;">
-                                <label for="selectPrayer">Select Prayer:</label>
-                                <select id="selectPrayer" class="form-control"></select>
-                            </div>
-                            <div class="form-group">
-                                <label for="hasCounter">Do you need a counter?:</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="hasCounter">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label for="myPrayerTitle">Title:</label>
-                                <input type="text" id="myPrayerTitle" class="form-control" placeholder="Title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="myPrayerContent">Content:</label>
-                                <textarea id="myPrayerContent" class="form-control" placeholder="Content" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="isDailyPrayer">Daily Prayer:</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="isDailyPrayer">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <button type="button" id="saveMyPrayerButton" class="btn btn-primary">Save</button>
-                            <button type="button" id="saveAddNewMyPrayerButton" class="btn btn-secondary">Save and Add New</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="drawer" id="drawer">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
     </div>
+    <div class="content">
+        <button id="openDrawerButton">Open Drawer</button>
+        <h1>Swipeable Drawer Example</h1>
+        <p>Swipe from the left edge to open the drawer.</p>
+    </div>
+    <script>const drawer = document.getElementById('drawer');
+        const openDrawerButton = document.getElementById('openDrawerButton');
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="scripts/site.js" type="text/javascript"></script>
+        openDrawerButton.addEventListener('click', () => {
+            drawer.classList.toggle('open');
+        });
+
+        let startX;
+
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            const change = touch.clientX - startX;
+
+            if (change > 0 && change < 250) {
+                drawer.style.left = `${-250 + change}px`;
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const change = e.changedTouches[0].clientX - startX;
+
+            if (change > 100) {
+                drawer.classList.add('open');
+            } else {
+                drawer.classList.remove('open');
+            }
+
+            drawer.style.left = '';
+        });</script>
 </body>
 </html>
