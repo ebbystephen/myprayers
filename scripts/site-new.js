@@ -140,6 +140,9 @@ function addMyPrayer(addNew) {
         } else {
     myPrayerForm.reset();
     document.getElementById('myPrayerId').value = '';
+    
+    document.getElementById('selectGroupRow').style.display = 'none';
+    document.getElementById('selectPrayerRow').style.display = 'none';
     }
 }
 
@@ -233,12 +236,14 @@ function editMyPrayer(id) {
     document.getElementById('hasCounter').checked = myPrayer.hasCounter;
     document.getElementById('toggleGroupSelect').checked = myPrayer.selectedGroup ? true : false;
     document.getElementById('togglePrayerSelect').checked = myPrayer.selectedPrayer ? true : false;
-    document.getElementById('selectGroup').style.display = myPrayer.selectedGroup ? 'block' : 'none';
-    document.getElementById('selectPrayer').style.display = myPrayer.selectedPrayer ? 'block' : 'none';
+    document.getElementById('selectGroupRow').style.display = myPrayer.selectedGroup ? 'block' : 'none';
+    document.getElementById('selectPrayerRow').style.display = myPrayer.selectedPrayer ? 'block' : 'none';
     document.getElementById('myPrayerTitle').required = myPrayer.selectedPrayer ? false : true;
     document.getElementById('myPrayerContent').disabled = myPrayer.selectedPrayer ? true : false;
     document.getElementById('myPrayerContent').value = myPrayer.selectedPrayer ? '' : myPrayer.content;
     document.getElementById('myPrayerContent').required = myPrayer.selectedPrayer ? false : true;
+    //document.getElementById('selectPrayerRow').value = myPrayer.selectedPrayer;
+    //document.getElementById('selectGroupRow').value = myPrayer.selectedGroup;
     openMyPrayerModal();
 }
 
@@ -255,9 +260,9 @@ function renderMyPrayers() {
         const row = dataTable.insertRow();
         row.insertCell(0).innerText = getGroupName(prayer.selectedGroup) || 'None';
         row.insertCell(1).innerText = concatenateStrings(prayer.title, getPrayerName(prayer.selectedPrayer));
-        row.insertCell(2).innerText = prayer.isDaily ? 'Yes' : 'No';
-        row.insertCell(3).innerText = prayer.hasCounter ? 'Yes' : 'No';
-        const actionCell = row.insertCell(4);
+        //row.insertCell(2).innerText = prayer.isDaily ? 'Yes' : 'No';
+        //row.insertCell(3).innerText = prayer.hasCounter ? 'Yes' : 'No';
+        const actionCell = row.insertCell(2);
         actionCell.innerHTML = `
         <button class="action-btn edit" onclick="editMyPrayer('${prayer.id}')"></button>
         <button class="action-btn delete" onclick="deleteMyPrayer('${prayer.id}')"></button>
@@ -308,8 +313,6 @@ function renderGroups() {
         });
     }
 }
-
-
 
 // Function to render prayers
 function renderPrayers() {
@@ -386,16 +389,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    //document.getElementById('prayerForm').addEventListener('submit', function (event) {
-    //    event.preventDefault();
-    //    const title = document.getElementById('title').value;
-    //    const icon = document.getElementById('icon').value;
-    //    const content = document.getElementById('prayerContent').value;
-    //    addPrayer(title, icon, content);
-    //    this.reset();
-    //    prayerModal.style.display = 'none';
-    //});
-
     document.getElementById('prayerList').addEventListener('click', function (event) {
         const target = event.target;
         const id = event.target.closest('tr').dataset.id;
@@ -414,13 +407,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const groupModal = document.getElementById('groupModal');
     const groupSpan = document.querySelectorAll('.close');
 
-    //document.getElementById('addGroupButton').addEventListener('click', function () {
-    //    // Clear the textboxes
-    //    document.getElementById('groupName').value = '';
-    //    document.getElementById('groupId').value = ''; // Clear the hidden input for group ID
-    //    groupModal.style.display = 'block';
-    //});
-
     groupSpan.forEach(span => span.addEventListener('click', function () {
         groupModal.style.display = 'none';
     }));
@@ -430,38 +416,6 @@ document.addEventListener('DOMContentLoaded', function () {
             groupModal.style.display = 'none';
         }
     });
-
-    //document.getElementById('groupForm').addEventListener('submit', function (event) {
-    //    event.preventDefault();
-    //    const groupName = document.getElementById('groupName').value;
-    //    const groupId = document.getElementById('groupId').value; // Get the group ID from the hidden input
-    //
-    //    if (groupId) {
-    //        // Update existing group
-    //        editGroup(groupId, groupName);
-    //    } else {
-    //        // Add new group
-    //        addGroup(groupName);
-    //    }
-    //
-    //    this.reset();
-    //    groupModal.style.display = 'none';
-    //});
-
-    //document.getElementById('groupList').addEventListener('click', function (event) {
-    //    const target = event.target;
-    //    const id = target.closest('tr').dataset.id;
-    //
-    //    if (target.classList.contains('delete-group')) {
-    //        deleteGroup(id);
-    //    } else if (target.classList.contains('edit-group')) {
-    //        const group = JSON.parse(localStorage.getItem(storageKeyGroups)).find(group => group.id === id);
-    //        document.getElementById('groupName').value = group.name;
-    //        document.getElementById('groupId').value = group.id; // Store the group ID in a hidden input
-    //        groupModal.style.display = 'block';
-    //    }
-    //});
-
 
     // Modal handling for my prayers
     const myPrayerModal = document.getElementById('myPrayerModal');
@@ -496,19 +450,6 @@ document.addEventListener('DOMContentLoaded', function () {
             selectGroup.insertAdjacentHTML('beforeend', `<option value="${group.id}">${group.name}</option>`);
         });
     }
-
-    // Show the modal and populate select options when the addMyPrayerButton is clicked
-    //document.getElementById('addMyPrayerButton').addEventListener('click', function () {
-    //    // Clear the textboxes
-    //    document.getElementById('myPrayerTitle').value = '';
-    //    document.getElementById('myPrayerContent').value = '';
-    //    document.getElementById('selectPrayer').value = '';
-    //    document.getElementById('selectGroup').value = '';
-    //    document.getElementById('isDailyPrayer').checked = false;
-    //    document.getElementById('hasCounter').checked = false;
-    //    populateSelectOptions();
-    //    myPrayerModal.style.display = 'block';
-    //});
 
     // Hide the modal when the close button is clicked
     document.querySelectorAll('.close').forEach(span => span.addEventListener('click', function () {
@@ -573,27 +514,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('myPrayerList').addEventListener('click', function (event) {
-        if (event.target.classList.contains('delete-my-prayer')) {
-            const id = event.target.closest('tr').dataset.id;
-            const myPrayers = JSON.parse(localStorage.getItem('myPrayers')) || [];
-            const updatedMyPrayers = myPrayers.filter(prayer => prayer.id !== id);
-            localStorage.setItem('myPrayers', JSON.stringify(updatedMyPrayers));
-            renderMyPrayers();
-        } else if (event.target.classList.contains('edit-my-prayer')) {
-            const id = event.target.closest('tr').dataset.id;
-            const myPrayer = JSON.parse(localStorage.getItem('myPrayers')).find(prayer => prayer.id === id);
-            document.getElementById('myPrayerTitle').value = myPrayer.title;
-            document.getElementById('myPrayerContent').value = myPrayer.content;
-            document.getElementById('selectPrayer').value = myPrayer.selectedPrayer;
-            document.getElementById('selectGroup').value = myPrayer.selectedGroup;
-            document.getElementById('isDailyPrayer').checked = myPrayer.isDaily;
-            const myPrayers = JSON.parse(localStorage.getItem('myPrayers')) || [];
-            const updatedMyPrayers = myPrayers.filter(prayer => prayer.id !== id);
-            localStorage.setItem('myPrayers', JSON.stringify(updatedMyPrayers));
-            myPrayerModal.style.display = 'block';
-        }
-    });
+    //document.getElementById('myPrayerList').addEventListener('click', function (event) {
+    //    if (event.target.classList.contains('delete-my-prayer')) {
+    //        const id = event.target.closest('tr').dataset.id;
+    //        const myPrayers = JSON.parse(localStorage.getItem('myPrayers')) || [];
+    //        const updatedMyPrayers = myPrayers.filter(prayer => prayer.id !== id);
+    //        localStorage.setItem('myPrayers', JSON.stringify(updatedMyPrayers));
+    //        renderMyPrayers();
+    //    } else if (event.target.classList.contains('edit-my-prayer')) {
+    //        const id = event.target.closest('tr').dataset.id;
+    //        const myPrayer = JSON.parse(localStorage.getItem('myPrayers')).find(prayer => prayer.id === id);
+    //        document.getElementById('myPrayerTitle').value = myPrayer.title;
+    //        document.getElementById('myPrayerContent').value = myPrayer.content;
+    //        document.getElementById('selectPrayer').value = myPrayer.selectedPrayer;
+    //        document.getElementById('selectGroup').value = myPrayer.selectedGroup;
+    //        document.getElementById('isDailyPrayer').checked = myPrayer.isDaily;
+    //        const myPrayers = JSON.parse(localStorage.getItem('myPrayers')) || [];
+    //        const updatedMyPrayers = myPrayers.filter(prayer => prayer.id !== id);
+    //        localStorage.setItem('myPrayers', JSON.stringify(updatedMyPrayers));
+    //        myPrayerModal.style.display = 'block';
+    //    }
+    //});
 
     // Example: Handling the toggle state change
     document.querySelectorAll('.toggle-button').forEach(button => button.addEventListener('change', function () {

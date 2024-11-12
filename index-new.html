@@ -7,105 +7,41 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="styles\site-new.css">
-    <style>
-        .admin-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-        }
+    <link rel="stylesheet" href="styles\site-new.css?v=1">
 
-
-        #adminModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-        }
-
-        #adminModalContent {
-            background: #fff;
-            margin: 0;
-            padding: 20px;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            position: fixed; /* Changed from relative to fixed */
-            top: 0;
-            left: 0;
-        }
-
-        .close-admin-modal {
-            position: fixed; /* Changed from absolute to fixed */
-            top: 0px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        #myPrayerModal, #prayerModal, #groupModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1100; /* Higher than adminModal */
-        }
-
-        .modal-content {
-            background: #fff;
-            margin: 5% auto;
-            padding: 20px;
-            width: 90%;
-            height: 90%;
-            overflow: auto;
-        }
-
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 24px;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
     <header>
         <h1>Prayer App</h1>
-        <img src="admin-icon.png" alt="Admin" class="admin-icon" id="adminIcon">
+        <!--<img src="admin-icon.png" alt="Admin" class="admin-icon" id="adminIcon">-->
     </header>
     <div id="tabs">
         <ul>
             <li><a href="#dailyTabContent">Daily</a></li>
             <li><a href="#otherTabContent">Other</a></li>
+            <li>
+                <a href="#adminTab">
+                    Admin
+                    <!--    <img src="admin-icon.png" alt="Admin" class="admin-icon" id="adminIcon">-->
+                </a>
+            </li>
         </ul>
         <div id="dailyTabContent" class="tab-content">
+            Dailys
             <!-- Daily tab content -->
         </div>
         <div id="otherTabContent" class="tab-content">
+            Others
             <!-- Other tab content -->
         </div>
-    </div>
-    <div id="adminModal">
-        <div id="adminModalContent">
-            <span class="close-admin-modal" id="closeAdminModal">&times;</span>
+        <div id="adminTab" class="tab-content">
             <div id="adminTabs">
                 <ul>
                     <li><a href="#prayersSubTabContent">Prayers</a></li>
                     <li><a href="#groupsSubTabContent">Groups</a></li>
                     <li><a href="#myPrayersSubTabContent">My Prayers</a></li>
                 </ul>
-                <div id="prayersSubTabContent" class="sub-tab-content">
+                <div id="prayersSubTabContent">
                     <button id="addPrayerButton" class="btn">Add Prayer</button>
                     <table id="prayerList" class="table">
                         <thead>
@@ -119,7 +55,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="groupsSubTabContent" class="sub-tab-content">
+                <div id="groupsSubTabContent">
                     <button id="addGroupButton" class="btn">Add Group</button>
                     <table id="groupList" class="table">
                         <thead>
@@ -133,15 +69,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="myPrayersSubTabContent" class="sub-tab-content">
+                <div id="myPrayersSubTabContent">
                     <button id="addMyPrayerButton" class="btn">Add My Prayer</button>
                     <table id="myPrayerList" class="table">
                         <thead>
                             <tr>
                                 <th>Group</th>
                                 <th>Prayer</th>
-                                <th>Daily Prayer</th>
-                                <th>Counter</th>
+                                <!--<th>Daily Prayer</th>-->
+                                <!--<th>Counter</th>-->
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -200,34 +136,51 @@
             <span id="closeMyPrayerButton" class="close">&times;</span>
             <form id="myPrayerForm">
                 <input type="hidden" id="myPrayerId" />
-                <div class="form-group">
-                    <label for="toggleGroupSelect">Show Group Select:</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="toggleGroupSelect">
-                        <span class="slider"></span>
-                    </label>
+                <div class="form-group inline-group">
+                    <div class="inline-controls">
+                        <div class="form-group">
+                            <label for="toggleGroupSelect">Group:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggleGroupSelect">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group" id="selectGroupRow" style="display: none;">
+                            <select id="selectGroup"></select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group" id="selectGroupRow" style="display: none;">
-                    <label for="selectGroup">Select Group:</label>
-                    <select id="selectGroup"></select>
+                <div class="form-group inline-group">
+                    <div class="inline-controls">
+                        <div class="form-group">
+                            <label for="togglePrayerSelect">Prayer:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="togglePrayerSelect">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group" id="selectPrayerRow" style="display: none;">
+                            <select id="selectPrayer"></select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="togglePrayerSelect">Show Prayer Select:</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="togglePrayerSelect">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="form-group" id="selectPrayerRow" style="display: none;">
-                    <label for="selectPrayer">Select Prayer:</label>
-                    <select id="selectPrayer"></select>
-                </div>
-                <div class="form-group">
-                    <label for="hasCounter">Do you need a counter?:</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="hasCounter">
-                        <span class="slider"></span>
-                    </label>
+                <div class="form-group inline-group">
+                    <div class="inline-controls">
+                        <div class="form-group">
+                            <label for="hasCounter">Counter:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="hasCounter">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="isDailyPrayer">Daily Prayer:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="isDailyPrayer">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="myPrayerTitle">Title:</label>
@@ -237,19 +190,12 @@
                     <label for="myPrayerContent">Content:</label>
                     <textarea id="myPrayerContent" placeholder="Content" required></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="isDailyPrayer">Daily Prayer:</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="isDailyPrayer">
-                        <span class="slider"></span>
-                    </label>
-                </div>
                 <button type="button" id="saveMyPrayerButton" class="btn">Save</button>
                 <button type="button" id="saveAddNewMyPrayerButton" class="btn">Save and Add New</button>
             </form>
         </div>
     </div>
-    <script src="scripts/site-new.js"></script>
+    <script src="scripts/site-new.js?v=1"></script>
     <script>$(function() {
         $("#tabs").tabs();
         $("#adminTabs").tabs();
