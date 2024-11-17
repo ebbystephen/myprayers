@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="styles\site.css?v=1.1">
+    <link rel="stylesheet" href="styles\site.css?v=1.3">
 
 </head>
 <body>
@@ -52,6 +52,7 @@
                     <li><a href="#myPrayersSubTabContent">My Prayers</a></li>
                 </ul>
                 <div id="prayersSubTabContent">
+                    <p><small>Add prayers to the site. Use them as references when creating custom prayers in My Prayers.</small></p>
                     <button id="addPrayerButton" class="btn">Add Prayer</button>
                     <table id="prayerList" class="table">
                         <thead>
@@ -66,6 +67,7 @@
                     </table>
                 </div>
                 <div id="groupsSubTabContent">
+                    <p><small>Create groups for specific prayer intentions. These can be selected when creating custom prayers in My Prayers.</small></p>
                     <button id="addGroupButton" class="btn">Add Group</button>
                     <table id="groupList" class="table">
                         <thead>
@@ -80,14 +82,13 @@
                     </table>
                 </div>
                 <div id="myPrayersSubTabContent">
+                    <p><small>Create custom prayers to pray. Select a prayer or create a new one by adding a title and content. You can assign it to a group if needed and enable the Counter to track repetitions. Use Daily Prayer to repeat it daily.</small></p>
                     <button id="addMyPrayerButton" class="btn">Add My Prayer</button>
                     <table id="myPrayerList" class="table">
                         <thead>
                             <tr>
                                 <th>Group</th>
                                 <th>Prayer</th>
-                                <!--<th>Daily Prayer</th>-->
-                                <!--<th>Counter</th>-->
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -103,6 +104,19 @@
     <div id="prayerModal" class="modal">
         <div class="modal-content">
             <span id="closePrayerButton" class="close">&times;</span>
+            <p>
+                <small>
+                    Prayers: Enter the prayer title, emoji and content.
+                </small>
+                <ul>
+                    <li>
+                        <small>Save: Saves the prayer and closes the popup.</small>
+                    </li>
+                    <li>
+                        <small>Save and Add New: Saves the prayer and lets you add another.</small>
+                    </li>
+                </ul>
+            </p>
             <form id="prayerForm">
                 <input type="hidden" id="prayerId" />
                 <div class="form-group">
@@ -127,7 +141,19 @@
     <div id="groupModal" class="modal">
         <div class="modal-content">
             <span id="closeGroupButton" class="close">&times;</span>
-            <h2>Group Entry Form</h2>
+            <p>
+                <small>
+                    Groups: Enter the group name.
+                </small>
+                <ul>
+                    <li>
+                        <small>Save: Saves the group and closes the popup.</small>
+                    </li>
+                    <li>
+                        <small>Save and Add New: Saves the group and lets you add another.</small>
+                    </li>
+                </ul>
+            </p>
             <form id="groupForm">
                 <input type="hidden" id="groupId" />
                 <div class="form-group">
@@ -144,6 +170,24 @@
     <div id="myPrayerModal" class="modal">
         <div class="modal-content">
             <span id="closeMyPrayerButton" class="close">&times;</span>
+            <p>
+                <small>
+                    My Prayers: Select a group (optional), prayer or enter a title and content. Set a counter or daily prayer if needed.
+                </small>
+                <ul>
+                    <li>
+                        <small>
+                            Save: Saves your prayer and closes the popup.
+
+                        </small>
+                    </li>
+                    <li>
+                        <small>
+                            Save and Add New: Saves your prayer and lets you add another.
+                        </small>
+                    </li>
+                </ul>
+            </p>
             <form id="myPrayerForm">
                 <input type="hidden" id="myPrayerId" />
                 <div class="form-group inline-group">
@@ -205,27 +249,28 @@
             </form>
         </div>
     </div>
-    <script src="scripts/site.js?v=1.1"></script>
-    <script>$(function() {
-        $("#tabs").tabs();
-        $("#adminTabs").tabs();
+    <script src="scripts/site.js?v=1.2"></script>
+    <script>
+        $(function () {
+            $("#tabs").tabs();
+            $("#adminTabs").tabs();
 
-        $("#adminIcon").click(function() {
+            $("#adminIcon").click(function () {
                 $("#tabs").hide();
-    $("#adminModal").show();
-});
+                $("#adminModal").show();
+            });
 
-            $("#closeAdminModal").click(function() {
+            $("#closeAdminModal").click(function () {
                 $("#adminModal").hide();
                 $("#tabs").show();
             });
 
-$("#adminModal").click(function(event) {
-    if (event.target == this) {
-        $(this).hide();
+            $("#adminModal").click(function (event) {
+                if (event.target == this) {
+                    $(this).hide();
                     $("#tabs").show();
-    }
-});
-    });</script>
+                }
+            });
+        });</script>
 </body>
 </html>

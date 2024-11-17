@@ -115,6 +115,12 @@ nav ul {
     max-width: 500px;
 }
 
+.modal-content p{margin:0px;}
+
+.modal-content ul{margin:0 0 5px;}
+
+
+
 .close {
     color: #aaa;
     float: right;
@@ -131,7 +137,7 @@ nav ul {
 
 /* Form Styles */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
     .form-group label {
@@ -312,7 +318,7 @@ input:checked + .slider {
 .inline-group {
     display: flex;
     align-items: center;
-    margin-bottom: 10px; /* Adjust as needed */
+    /*margin-bottom: 10px;*/ /* Adjust as needed */
 }
 
     .inline-group label {
@@ -394,4 +400,49 @@ input:checked + .slider {
 .close {
     cursor: pointer;
     font-size: 24px;
+}
+
+.ui-accordion-content {
+    overflow: visible !important; /* Ensure content is not clipped */
+    height: auto !important; /* Allow full height */
+}
+
+.emoji-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+    .emoji-item label {
+        flex: 2;
+        font-weight: bold;
+        color: #333;
+    }
+
+.clickable {
+    cursor: pointer;
+    color: #007bff;
+}
+.emoji-item button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.emoji-item input[type="text"] {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 10px;
+    background-color: #f0f0f0;
+    color: #333;
 }

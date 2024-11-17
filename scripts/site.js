@@ -147,6 +147,9 @@ function addMyPrayer(addNew) {
         document.getElementById('selectGroupRow').style.display = 'none';
         document.getElementById('selectPrayerRow').style.display = 'none';
     }
+
+    renderDailyPrayers();
+    renderOtherPrayers();
 }
 
 function closeGroupModal() {
@@ -294,7 +297,7 @@ function renderDailyPrayers() {
     const storedPrayers = JSON.parse(localStorage.getItem(storageKeyPrayers)) || [];
     const storedGroups = JSON.parse(localStorage.getItem(storageKeyGroups)) || [];
 
-    const filteredPrayers = storedMyPrayers.filter(prayer => prayer.isDaily === false);
+    const filteredPrayers = storedMyPrayers.filter(prayer => prayer.isDaily === true);
 
 
     const groupsMap = storedGroups.reduce((map, group) => {
@@ -310,7 +313,7 @@ function renderDailyPrayers() {
     const enrichedJson = filteredPrayers.map(item => ({
         ...item,
         groupName: groupsMap[item.selectedGroup],
-        prayerName : prayersMap[item.selectedPrayer]
+        prayerName: prayersMap[item.selectedPrayer] || item.title
     }));
 
     const groupedData = enrichedJson.reduce((acc, item) => {
@@ -326,14 +329,14 @@ function renderDailyPrayers() {
         const groupContent = $('<div></div>');
 
         items.forEach((item) => {
-            const row = $("<div class='item-row'></div>");
-            row.append(`<span class='prayer' data-content="${item.content}">${item.prayerName}</span>`);
+            const row = $("<div class='emoji-item'></div>");
+            row.append(`<label class='clickable' data-content="${item.content}">${item.prayerName}</label>`);
 
             if (item.hasCounter) {
                 const counterControls = `
-                    <button class='decrement'>-</button>
+                    <button type='button' class='decrement'>-</button>
                     <input type='text' value='0' readonly class='counter'>
-                    <button class='increment'>+</button>`;
+                    <button type='button' class='increment'>+</button>`;
                 row.append(counterControls);
             } else {
                 row.append("<input type='checkbox' class='checkbox'>");
@@ -347,18 +350,27 @@ function renderDailyPrayers() {
     });
 
     // Initialize Accordion
-    $accordion.accordion();
+    $accordion.accordion({
+        active: 0, // Open the first panel
+        collapsible: true, // Allow collapsing all panels
+        icons: {
+            header: "ui-icon-plus",       // Icon for closed state
+            activeHeader: "ui-icon-minus" // Icon for open state
+        }
+        
+    });
+    $accordion.accordion('refresh');
 
 
     // Popup Logic
     $(document).on("click", ".prayer", function () {
         const content = $(this).data("content");
-        $("#popupContent").text(content);
-        $("#popup").removeClass("hidden");
+        $("#dailypopupContent").text(content);
+        $("#dailypopup").removeClass("hidden");
     });
 
-    $("#closePopup").click(function () {
-        $("#popup").addClass("hidden");
+    $("#dailyclosePopup").click(function () {
+        $("#dailypopup").addClass("hidden");
     });
 
     // Counter Logic
@@ -376,8 +388,6 @@ function renderDailyPrayers() {
 }
 
 function renderOtherPrayers() {
-
-
 
     // Fetch my prayers from localStorage
     const storedMyPrayers = JSON.parse(localStorage.getItem(storageKeyMyPrayers)) || [];
@@ -399,7 +409,7 @@ function renderOtherPrayers() {
     const enrichedJson = filteredPrayers.map(item => ({
         ...item,
         groupName: groupsMap[item.selectedGroup],
-        prayerName : prayersMap[item.selectedPrayer]
+        prayerName : prayersMap[item.selectedPrayer] || 'None'
     }));
 
     const groupedData = enrichedJson.reduce((acc, item) => {
@@ -437,17 +447,18 @@ function renderOtherPrayers() {
 
     // Initialize Accordion
     $accordion.accordion();
+    $accordion.accordion("refresh");
 
 
     // Popup Logic
     $(document).on("click", ".prayer", function () {
         const content = $(this).data("content");
-        $("#popupContent").text(content);
-        $("#popup").removeClass("hidden");
+        $("#otherpopupContent").text(content);
+        $("#otherpopup").removeClass("hidden");
     });
 
-    $("#closePopup").click(function () {
-        $("#popup").addClass("hidden");
+    $("#otherclosePopup").click(function () {
+        $("#otherpopup").addClass("hidden");
     });
 
     // Counter Logic
