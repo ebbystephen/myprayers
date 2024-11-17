@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="styles\site.css?v=1">
+    <link rel="stylesheet" href="styles\site.css?v=1.1">
 
 </head>
 <body>
@@ -27,12 +27,22 @@
             </li>
         </ul>
         <div id="dailyTabContent" class="tab-content">
-            Dailys
-            <!-- Daily tab content -->
+            <div id="accordion"></div>
+            <div id="dailypopup" class="dailypopup hidden">
+                <div class="daily-popup-content">
+                    <span id="dailyclosePopup" class="close">&times;</span>
+                    <div id="dailypopupContent"></div>
+                </div>
+            </div>
         </div>
         <div id="otherTabContent" class="tab-content">
-            Others
-            <!-- Other tab content -->
+            <div id="otheraccordion"></div>
+            <div id="otherpopup" class="otherpopup hidden">
+                <div class="other-popup-content">
+                    <span id="otherclosePopup" class="close">&times;</span>
+                    <div id="otherpopupContent"></div>
+                </div>
+            </div>
         </div>
         <div id="adminTab" class="tab-content">
             <div id="adminTabs">
@@ -195,7 +205,7 @@
             </form>
         </div>
     </div>
-    <script src="scripts/site.js?v=1"></script>
+    <script src="scripts/site.js?v=1.1"></script>
     <script>$(function() {
         $("#tabs").tabs();
         $("#adminTabs").tabs();

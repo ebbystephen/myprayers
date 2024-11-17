@@ -288,6 +288,182 @@ function renderMyPrayers() {
     });
 }
 
+function renderDailyPrayers() {
+    // Fetch my prayers from localStorage
+    const storedMyPrayers = JSON.parse(localStorage.getItem(storageKeyMyPrayers)) || [];
+    const storedPrayers = JSON.parse(localStorage.getItem(storageKeyPrayers)) || [];
+    const storedGroups = JSON.parse(localStorage.getItem(storageKeyGroups)) || [];
+
+    const filteredPrayers = storedMyPrayers.filter(prayer => prayer.isDaily === false);
+
+
+    const groupsMap = storedGroups.reduce((map, group) => {
+        map[group.id] = group.name;
+        return map;
+    }, {});
+
+    const prayersMap = storedPrayers.reduce((map, prayer) => {
+        map[prayer.id] = prayer.title;
+        return map;
+    }, {});
+
+    const enrichedJson = filteredPrayers.map(item => ({
+        ...item,
+        groupName: groupsMap[item.selectedGroup],
+        prayerName : prayersMap[item.selectedPrayer]
+    }));
+
+    const groupedData = enrichedJson.reduce((acc, item) => {
+        if (!acc[item.groupName]) acc[item.groupName] = [];
+        acc[item.groupName].push(item);
+        return acc;
+    }, {});
+
+    // Build Accordion
+    const $accordion = $("#accordion");
+    $.each(groupedData, (group, items) => {
+        const groupHeader = `<h3>${group}</h3>`;
+        const groupContent = $('<div></div>');
+
+        items.forEach((item) => {
+            const row = $("<div class='item-row'></div>");
+            row.append(`<span class='prayer' data-content="${item.content}">${item.prayerName}</span>`);
+
+            if (item.hasCounter) {
+                const counterControls = `
+                    <button class='decrement'>-</button>
+                    <input type='text' value='0' readonly class='counter'>
+                    <button class='increment'>+</button>`;
+                row.append(counterControls);
+            } else {
+                row.append("<input type='checkbox' class='checkbox'>");
+            }
+
+            groupContent.append(row);
+        });
+
+        $accordion.append(groupHeader);
+        $accordion.append(groupContent);
+    });
+
+    // Initialize Accordion
+    $accordion.accordion();
+
+
+    // Popup Logic
+    $(document).on("click", ".prayer", function () {
+        const content = $(this).data("content");
+        $("#popupContent").text(content);
+        $("#popup").removeClass("hidden");
+    });
+
+    $("#closePopup").click(function () {
+        $("#popup").addClass("hidden");
+    });
+
+    // Counter Logic
+    $(document).on("click", ".increment", function () {
+        const $counter = $(this).siblings(".counter");
+        $counter.val(parseInt($counter.val()) + 1);
+    });
+
+    $(document).on("click", ".decrement", function () {
+        const $counter = $(this).siblings(".counter");
+        const currentValue = parseInt($counter.val());
+        if (currentValue > 0) $counter.val(currentValue - 1);
+    });
+
+}
+
+function renderOtherPrayers() {
+
+
+
+    // Fetch my prayers from localStorage
+    const storedMyPrayers = JSON.parse(localStorage.getItem(storageKeyMyPrayers)) || [];
+    const storedPrayers = JSON.parse(localStorage.getItem(storageKeyPrayers)) || [];
+    const storedGroups = JSON.parse(localStorage.getItem(storageKeyGroups)) || [];
+    // Filter prayers by selectedGroup
+    const filteredPrayers = storedMyPrayers.filter(prayer => prayer.isDaily === false);
+
+    const groupsMap = storedGroups.reduce((map, group) => {
+        map[group.id] = group.name;
+        return map;
+    }, {});
+
+    const prayersMap = storedPrayers.reduce((map, prayer) => {
+        map[prayer.id] = prayer.title;
+        return map;
+    }, {});
+
+    const enrichedJson = filteredPrayers.map(item => ({
+        ...item,
+        groupName: groupsMap[item.selectedGroup],
+        prayerName : prayersMap[item.selectedPrayer]
+    }));
+
+    const groupedData = enrichedJson.reduce((acc, item) => {
+        if (!acc[item.groupName]) acc[item.groupName] = [];
+        acc[item.groupName].push(item);
+        return acc;
+    }, {});
+
+    // Build Accordion
+    const $accordion = $("#otheraccordion");
+    $.each(groupedData, (group, items) => {
+        const groupHeader = `<h3>${group}</h3>`;
+        const groupContent = $('<div></div>');
+
+        items.forEach((item) => {
+            const row = $("<div class='item-row'></div>");
+            row.append(`<span class='prayer' data-content="${item.content}">${item.prayerName}</span>`);
+
+            if (item.hasCounter) {
+                const counterControls = `
+                    <button class='decrement'>-</button>
+                    <input type='text' value='0' readonly class='counter'>
+                    <button class='increment'>+</button>`;
+                row.append(counterControls);
+            } else {
+                row.append("<input type='checkbox' class='checkbox'>");
+            }
+
+            groupContent.append(row);
+        });
+
+        $accordion.append(groupHeader);
+        $accordion.append(groupContent);
+    });
+
+    // Initialize Accordion
+    $accordion.accordion();
+
+
+    // Popup Logic
+    $(document).on("click", ".prayer", function () {
+        const content = $(this).data("content");
+        $("#popupContent").text(content);
+        $("#popup").removeClass("hidden");
+    });
+
+    $("#closePopup").click(function () {
+        $("#popup").addClass("hidden");
+    });
+
+    // Counter Logic
+    $(document).on("click", ".increment", function () {
+        const $counter = $(this).siblings(".counter");
+        $counter.val(parseInt($counter.val()) + 1);
+    });
+
+    $(document).on("click", ".decrement", function () {
+        const $counter = $(this).siblings(".counter");
+        const currentValue = parseInt($counter.val());
+        if (currentValue > 0) $counter.val(currentValue - 1);
+    });
+
+}
+
 function concatenateStrings(stringA, stringB) {
     if (!stringA && !stringB) {
         return '';
@@ -585,6 +761,8 @@ document.addEventListener('DOMContentLoaded', function () {
     renderMyPrayers();
     //populatePrayers();
     //populateGroups();
+    renderDailyPrayers();
+    renderOtherPrayers();
 });
 
 $(document).ready(function () {
