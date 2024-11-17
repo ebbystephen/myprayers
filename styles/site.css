@@ -226,3 +226,113 @@ input:checked + .slider {
     padding: 10px 15px; /* Padding for better spacing */
     text-decoration: none; /* Remove underline */
 }
+/* Add transition for smooth effect */
+.tab-content {
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+    .tab-content.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .tab-content.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+.admin-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+
+#adminModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+}
+
+#adminModalContent {
+    background: #fff;
+    margin: 0;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    position: fixed; /* Changed from relative to fixed */
+    top: 0;
+    left: 0;
+}
+
+.close-admin-modal {
+    position: fixed; /* Changed from absolute to fixed */
+    top: 0px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#myPrayerModal, #prayerModal, #groupModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1100; /* Higher than adminModal */
+}
+
+.modal-content {
+    background: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    height: 90%;
+    overflow: auto;
+}
+
+.close {
+    /*position: absolute;
+    top: 10px;
+    right: 10px;*/
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+}
+.inline-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Adjust as needed */
+}
+
+    .inline-group label {
+        margin-right: 10px; /* Adjust as needed */
+    }
+
+    .inline-group .toggle-switch {
+        margin-right: 20px; /* Adjust as needed */
+    }
+
+#selectGroupRow, #selectPrayerRow {
+    margin-left: 10px; /* Adjust as needed */
+}
+
+
+.inline-controls {
+    display: flex;
+    align-items: center;
+}
+
+    .inline-controls .form-group {
+        margin-right: 20px; /* Adjust as needed */
+    }
