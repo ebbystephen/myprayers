@@ -427,8 +427,7 @@ function renderOtherPrayers() {
             <div>
                 ${items.map(item => `
                     <div class="accordion-item">
-                        <a href="#" class="accordion-link" data-content="${item.content}">${item.title}</a>
-                        <label class="prayer clickable" onclick="showPopup(${item.content});" data-content="${item.content}">${item.title}</label>
+                        <label class="clickable" data-content="${item.content}">${item.title}</label>
                          ${item.hasCounter ? `
                             <button type="button" class="decrement">-</button>
                             <input type="text" value="0" readonly class="counter">
@@ -570,6 +569,13 @@ function renderGroups() {
 
     populateGroups();
 }
+
+// Attach a click event handler to labels with the 'clickable' class
+$(document).on("click", ".clickable", function () {
+    const content = $(this).data("content"); // Get the value of the data-content attribute
+    showPopup(content); // Call the Showpopup method and pass the content
+});
+
 
 // Function to render prayers
 function renderPrayers() {
