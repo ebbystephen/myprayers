@@ -1052,7 +1052,7 @@ function getPrayerName(prayerid) {
 
 // Function to populate select options
 function populatePrayers() {
-    const prayers = JSON.parse(localStorage.getItem('prayers')) || [];
+    const prayers = JSON.parse(localStorage.getItem(storageKeyPrayers)) || [];
     const selectPrayer = document.getElementById('selectPrayer');
 
     selectPrayer.innerHTML = '';
@@ -1064,7 +1064,7 @@ function populatePrayers() {
 
 // Function to populate select options
 function populateGroups() {
-    const groups = JSON.parse(localStorage.getItem('groups')) || [];
+    const groups = JSON.parse(localStorage.getItem(storageKeyGroups)) || [];
     const selectGroup = document.getElementById('selectGroup');
 
     selectGroup.innerHTML = '';
