@@ -343,63 +343,42 @@ input:checked + .slider {
         margin-right: 20px; /* Adjust as needed */
     }
 
-.dailypopup { /* Full-screen popup styles */
-    display: flex;
+/* Popup container */
+.popup {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    /*padding: 20px;*/
+    z-index: 1000;
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.dailypopup.hidden {
-    display: none;
-}
-
-.daily-popup-content {
-    background: white;
+/* Popup content container */
+.popup-content {
+    background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto; /* Enable scrolling within the content box */
     text-align: center;
 }
 
-.close {
+/* Close button (fixed at bottom) */
+.close-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 24px;
-}
-}
-
-.otherpopup { /* Full-screen popup styles */
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-    .otherpopup.hidden {
-        display: none;
-    }
-
-.other-popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 90%;
-    text-align: center;
-}
-
-.close {
-    cursor: pointer;
-    font-size: 24px;
+    margin-top: 10px;
 }
 
 .ui-accordion-content {

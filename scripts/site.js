@@ -374,21 +374,21 @@ function renderDailyPrayers() {
     });
 
     // Counter Logic
-    $(document).on("click", ".increment", function () {
-        const $counter = $(this).siblings(".counter");
-        $counter.val(parseInt($counter.val()) + 1);
-    });
+    //$(document).on("click", ".increment", function () {
+    //    const $counter = $(this).siblings(".counter");
+    //    $counter.val(parseInt($counter.val()) + 1);
+    //});
 
-    $(document).on("click", ".decrement", function () {
-        const $counter = $(this).siblings(".counter");
-        const currentValue = parseInt($counter.val());
-        if (currentValue > 0) $counter.val(currentValue - 1);
-    });
+    //$(document).on("click", ".decrement", function () {
+    //    const $counter = $(this).siblings(".counter");
+    //    const currentValue = parseInt($counter.val());
+    //    if (currentValue > 0) $counter.val(currentValue - 1);
+    //});
 
 }
 
 function renderOtherPrayers() {
-
+    debugger;
     // Fetch my prayers from localStorage
     const storedMyPrayers = JSON.parse(localStorage.getItem(storageKeyMyPrayers)) || [];
     const storedPrayers = JSON.parse(localStorage.getItem(storageKeyPrayers)) || [];
@@ -396,59 +396,69 @@ function renderOtherPrayers() {
     // Filter prayers by selectedGroup
     const filteredPrayers = storedMyPrayers.filter(prayer => prayer.isDaily === false);
 
-    const groupsMap = storedGroups.reduce((map, group) => {
-        map[group.id] = group.name;
-        return map;
-    }, {});
+    const result = storedMyPrayers.map(myPrayer => {
+        const group = storedGroups.find(g => g.id === myPrayer.selectedGroup) || {};
+        const prayer = storedPrayers.find(p => p.id === myPrayer.selectedPrayer) || {};
 
-    const prayersMap = storedPrayers.reduce((map, prayer) => {
-        map[prayer.id] = prayer.title;
-        return map;
-    }, {});
+        return {
+            id: myPrayer.id,
+            groupName: group.name || "Ungrouped",
+            //title: prayer.title || myPrayer.title || null,
+            title: (myPrayer.title && prayer.title) ? myPrayer.title + " (" + prayer.title  + ") ": (myPrayer.title || prayer.title || null),
+            content: prayer.content || myPrayer.content || null,
+            hasCounter : myPrayer.hasCounter
+        };
+    });
 
-    const enrichedJson = filteredPrayers.map(item => ({
-        ...item,
-        groupName: groupsMap[item.selectedGroup],
-        prayerName : prayersMap[item.selectedPrayer] || 'None'
-    }));
-
-    const groupedData = enrichedJson.reduce((acc, item) => {
-        if (!acc[item.groupName]) acc[item.groupName] = [];
-        acc[item.groupName].push(item);
+    // Group results by groupName
+    const groupedResults = result.reduce((acc, item) => {
+        const groupName = item.groupName || "Ungrouped";
+        if (!acc[groupName]) acc[groupName] = [];
+        acc[groupName].push(item);
         return acc;
     }, {});
 
-    // Build Accordion
-    const $accordion = $("#otheraccordion");
-    $.each(groupedData, (group, items) => {
-        const groupHeader = `<h3>${group}</h3>`;
-        const groupContent = $('<div></div>');
+    // Generate the accordion HTML dynamically
+    const accordion = document.getElementById("otheraccordion");
+    accordion.innerHTML = Object.entries(groupedResults)
+        .map(([groupName, items]) => {
+            return `
+            <h3>${groupName}</h3>
+            <div>
+                ${items.map(item => `
+                    <div class="accordion-item">
+                        <a href="#" class="accordion-link" data-content="${item.content}">${item.title}</a>
+                        <label class="prayer clickable" onclick="showPopup(${item.content});" data-content="${item.content}">${item.title}</label>
+                         ${item.hasCounter ? `
+                            <button type="button" class="decrement">-</button>
+                            <input type="text" value="0" readonly class="counter">
+                            <button type="button" class="increment">+</button>
+                        ` : `
+                            <input type="checkbox" class="checkbox">
+                        `}
+                    </div>
+                `).join("")}
+            </div>
+        `;
+        })
+        .join("");
 
-        items.forEach((item) => {
-            const row = $("<div class='item-row'></div>");
-            row.append(`<span class='prayer' data-content="${item.content}">${item.prayerName}</span>`);
-
-            if (item.hasCounter) {
-                const counterControls = `
-                    <button class='decrement'>-</button>
-                    <input type='text' value='0' readonly class='counter'>
-                    <button class='increment'>+</button>`;
-                row.append(counterControls);
-            } else {
-                row.append("<input type='checkbox' class='checkbox'>");
-            }
-
-            groupContent.append(row);
+    // Initialize jQuery UI Accordion
+    $(function () {
+        $("#otheraccordion").accordion({
+            collapsible: true,
+            heightStyle: "content" // Adjust height to content
         });
-
-        $accordion.append(groupHeader);
-        $accordion.append(groupContent);
     });
 
-    // Initialize Accordion
-    $accordion.accordion();
-    $accordion.accordion("refresh");
-
+    // Handle click on the item to show content in a popup
+    $(document).on("click", ".accordion-link", function (e) {
+        e.preventDefault();
+        const content = $(this).data("content");
+        //alert(content); // Replace with a custom popup logic if needed
+        $("#otherpopupContent").text(content);
+        $("#otherpopup").removeClass("hidden");
+    });
 
     // Popup Logic
     $(document).on("click", ".prayer", function () {
@@ -472,6 +482,46 @@ function renderOtherPrayers() {
         const currentValue = parseInt($counter.val());
         if (currentValue > 0) $counter.val(currentValue - 1);
     });
+
+}
+
+function showPopup(content) {
+    const popup = document.createElement('div');
+    popup.classList.add('popup');
+
+    // Create content container
+    const contentContainer = document.createElement('div');
+    contentContainer.classList.add('popup-content');
+    contentContainer.innerHTML = content;
+
+    // Create a close button
+    const closeButton = document.createElement('button');
+    closeButton.classList.add('close-btn');
+    closeButton.textContent = 'Close';
+    closeButton.onclick = function () {
+        document.body.removeChild(popup);
+    };
+
+    // Add the close button to the content container
+    contentContainer.appendChild(closeButton);
+
+    const closeIcon = document.createElement('button');
+    closeIcon.classList.add('close-icon');
+    closeIcon.textContent = 'X';
+    closeIcon.onclick = function () {
+        document.body.removeChild(popup);
+    };
+
+    //Add the close icon to the popup
+    //popup.appendChild(closeIcon);
+    contentContainer.prepend(closeIcon);
+
+    // Add the close button to the popup
+    popup.appendChild(contentContainer);
+
+    // Append popup to body
+    document.body.appendChild(popup);
+    //document.body.appendChild(closeButton);
 
 }
 
